@@ -18,7 +18,6 @@ export default function Phase4ComplexUse({ word, words = [], onComplete, onSkip 
   const [stage, setStage] = useState('intro'); // intro | conversation | feedback | done
   const [topic] = useState(TOPICS[Math.floor(Math.random() * TOPICS.length)]);
   const [messages, setMessages] = useState([]);
-  const [currentTranscript, setCurrentTranscript] = useState('');
   const [loading, setLoading] = useState(false);
   const [evaluation, setEvaluation] = useState(null);
   const [successCount, setSuccessCount] = useState(0);
@@ -50,7 +49,6 @@ export default function Phase4ComplexUse({ word, words = [], onComplete, onSkip 
   }
 
   async function handleUserSpeech(text) {
-    setCurrentTranscript(text);
     setLoading(true);
 
     const userMsg = { role: 'user', content: text };

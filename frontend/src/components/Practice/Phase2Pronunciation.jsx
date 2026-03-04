@@ -9,7 +9,6 @@ const HIGH_PASS = 80;
 const ATTEMPTS_FOR_ADVANCE = 2;
 
 export default function Phase2Pronunciation({ word, onComplete, onSkip }) {
-  const [transcript, setTranscript] = useState('');
   const [evaluation, setEvaluation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState([]);
@@ -26,7 +25,6 @@ export default function Phase2Pronunciation({ word, onComplete, onSkip }) {
   }, [word.russian_word]);
 
   async function handleTranscript(text) {
-    setTranscript(text);
     setLoading(true);
     setStage('feedback');
 
@@ -60,7 +58,6 @@ export default function Phase2Pronunciation({ word, onComplete, onSkip }) {
   }
 
   function tryAgain() {
-    setTranscript('');
     setEvaluation(null);
     setStage('practice');
   }

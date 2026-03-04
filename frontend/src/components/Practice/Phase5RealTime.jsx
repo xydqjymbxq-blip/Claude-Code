@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import AudioPlayer from '../shared/AudioPlayer';
 import { practice } from '../../services/api';
 import { useSpeechRecognition } from '../../hooks/useSpeechRecognition';
@@ -30,7 +30,7 @@ export default function Phase5RealTime({ word, words = [], onComplete, onSkip })
   const sessionTimerRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  const { isListening, transcript, start: startRecognition, stop: stopRecognition, reset: resetTranscript } = useSpeechRecognition({
+  const { isListening, start: startRecognition, stop: stopRecognition, reset: resetTranscript } = useSpeechRecognition({
     lang: 'ru-RU',
     onResult: handleSpeech,
   });

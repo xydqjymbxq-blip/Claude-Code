@@ -5,7 +5,7 @@ import ProgressDashboard from './components/Dashboard/ProgressDashboard';
 import PracticeSession from './components/Practice/PracticeSession';
 import FlashcardUpload from './components/Import/FlashcardUpload';
 import InitialAssessment from './components/Import/InitialAssessment';
-import { assessment, progress } from './services/api';
+import { assessment } from './services/api';
 
 const VIEWS = {
   LOGIN: 'login',
@@ -21,8 +21,8 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
   });
   const [view, setView] = useState(user ? VIEWS.DASHBOARD : VIEWS.LOGIN);
-  const [goalMinutes, setGoalMinutes] = useState(20);
-  const [hasAssessment, setHasAssessment] = useState(null);
+  const [goalMinutes] = useState(20);
+  const [, setHasAssessment] = useState(null);
 
   useEffect(() => {
     if (user) {

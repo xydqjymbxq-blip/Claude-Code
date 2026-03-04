@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import AudioPlayer from '../shared/AudioPlayer';
 import { practice } from '../../services/api';
 
-const EXAMPLES_BY_WORD = {}; // Could be populated from API
 
 export default function Phase1Recognition({ word, onComplete, onSkip }) {
   const [viewCount, setViewCount] = useState(0);

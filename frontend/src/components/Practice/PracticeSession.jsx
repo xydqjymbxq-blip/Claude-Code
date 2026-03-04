@@ -6,24 +6,8 @@ import Phase4ComplexUse from './Phase4ComplexUse';
 import Phase5RealTime from './Phase5RealTime';
 import { practice } from '../../services/api';
 
-const PHASE_LABELS = {
-  1: 'Recognition',
-  2: 'Pronunciation',
-  3: 'Sentences',
-  4: 'Complex Use',
-  5: 'Real-Time',
-};
-
-const PHASE_COLORS = {
-  1: 'blue',
-  2: 'purple',
-  3: 'green',
-  4: 'orange',
-  5: 'red',
-};
 
 export default function PracticeSession({ onFinish, goalMinutes = 20 }) {
-  const [sessionData, setSessionData] = useState(null);
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -33,13 +17,13 @@ export default function PracticeSession({ onFinish, goalMinutes = 20 }) {
 
   useEffect(() => {
     loadSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goalMinutes]);
 
   async function loadSession() {
     try {
       setLoading(true);
       const data = await practice.getSession(goalMinutes);
-      setSessionData(data);
 
       // Flatten into queue: [{word, phase}]
       const q = [];
