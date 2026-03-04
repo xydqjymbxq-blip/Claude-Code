@@ -1,0 +1,16 @@
+{
+  "short_name": "RussianApp",
+  "name": "Russian Language Learning",
+  "description": "5-phase Russian vocabulary activation system",
+  "icons": [
+    { "src": "icons/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#003580",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "categories": ["education"],
+  "lang": "en"
+}
