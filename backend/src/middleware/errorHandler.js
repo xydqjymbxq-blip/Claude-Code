@@ -9,7 +9,8 @@ function errorHandler(err, req, res, next) {
     return res.status(409).json({ error: 'Duplicate entry' });
   }
 
-  res.status(500).json({ error: 'Internal server error' });
+  const status = err.status || 500;
+  res.status(status).json({ error: err.message || 'Internal server error' });
 }
 
 module.exports = { errorHandler };
