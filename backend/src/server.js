@@ -15,7 +15,9 @@ const PORT = process.env.PORT || 3001;
 
 const allowedOrigins = [
   'http://localhost:3000',
-  ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : []),
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map(o => o.trim().replace(/[\r\n\t]/g, '')).filter(Boolean)
+    : []),
 ];
 
 app.use(cors({
