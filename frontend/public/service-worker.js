@@ -1,14 +1,14 @@
-const CACHE_NAME = 'russian-learning-v1';
+const CACHE_NAME = 'russian-learning-v2';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache.filter(url => !url.includes('bundle'))))
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.allSettled(urlsToCache.map(url => cache.add(url)))
+    )
   );
 });
 
