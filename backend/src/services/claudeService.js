@@ -1,8 +1,14 @@
 const Anthropic = require('@anthropic-ai/sdk');
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+function getClient() {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+  }
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
 
 async function evaluatePronunciation(targetWord, userTranscript, userLevel = 'B1') {
+  const client = getClient();
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 600,
@@ -36,6 +42,7 @@ Pay special attention to: stress placement, soft vs hard consonants, vowel reduc
 }
 
 async function evaluateSentence(targetWord, userSentence, userLevel = 'B1') {
+  const client = getClient();
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 700,
@@ -68,6 +75,7 @@ Evaluate and return ONLY valid JSON (no markdown, no extra text):
 }
 
 async function evaluateConversation(targetWords, conversationTranscript, userLevel = 'B1', phase = 4) {
+  const client = getClient();
   const pressureNote = phase === 5 ? 'This is real-time conversation practice, so also evaluate response timing and fluency.' : '';
 
   const message = await client.messages.create({
@@ -105,6 +113,7 @@ Evaluate and return ONLY valid JSON (no markdown, no extra text):
 }
 
 async function generateAssessmentFeedback(word, response, type, userLevel = 'B1') {
+  const client = getClient();
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 400,
@@ -152,6 +161,7 @@ Rules:
     { role: 'user', content: userMessage }
   ];
 
+  const client = getClient();
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 300,
