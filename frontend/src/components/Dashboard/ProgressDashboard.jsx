@@ -31,7 +31,12 @@ export default function ProgressDashboard({ onStartPractice }) {
     );
   }
 
-  if (!dashboard) return null;
+  if (!dashboard) return (
+    <div className="flex flex-col items-center justify-center min-h-64 gap-4 text-center">
+      <p className="text-gray-500">Could not load dashboard. Check your connection.</p>
+      <button onClick={() => window.location.reload()} className="btn-primary">Retry</button>
+    </div>
+  );
 
   const pieData = Object.entries(dashboard.phase_distribution || {}).map(([phase, count], i) => ({
     name: PHASE_NAMES[i],
