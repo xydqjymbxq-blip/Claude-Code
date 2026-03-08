@@ -18,6 +18,7 @@ async function transcribeWithWhisper(audioBuffer, filename = 'audio.webm') {
       ...formData.getHeaders(),
     },
     body: formData,
+    signal: AbortSignal.timeout(30000),
   });
 
   if (!response.ok) {

@@ -206,7 +206,9 @@ async function completeSession(req, res, next) {
     await db.query(
       `INSERT INTO practice_sessions (user_id, session_date, duration_minutes, words_practiced, session_type)
        VALUES ($1, CURRENT_DATE, $2, $3, 'mixed')
-       ON CONFLICT DO NOTHING`,
+       ON CONFLICT (user_id, session_date) DO UPDATE SET
+         duration_minutes = practice_sessions.duration_minutes + EXCLUDED.duration_minutes,
+         words_practiced = practice_sessions.words_practiced + EXCLUDED.words_practiced`,
       [userId, Math.max(0, parseInt(duration_minutes) || 0), Math.max(0, parseInt(words_practiced) || 0)]
     );
     res.json({ success: true });
