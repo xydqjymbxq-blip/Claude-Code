@@ -87,15 +87,18 @@ async function submitAssessmentAnswer(req, res, next) {
   }
 
   try {
-    const wordResult = await db.query('SELECT * FROM vocabulary_items WHERE id = $1', [word_id]);
+    const wordResult = await db.query('SELECT * FROM vocabulary_items WHERE id = $1 AND user_id = $2', [word_id, req.user.userId]);
     const word = wordResult.rows[0];
     if (!word) return res.status(404).json({ error: 'Word not found' });
+
+    const userResult = await db.query('SELECT russian_level FROM users WHERE id = $1', [req.user.userId]);
+    const level = userResult.rows[0]?.russian_level || 'B1';
 
     const evaluation = await claude.generateAssessmentFeedback(
       word.russian_word,
       response,
       test_type,
-      'B1'
+      level
     );
 
     res.json({ evaluation, word: { russian_word: word.russian_word, english_definition: word.english_definition } });

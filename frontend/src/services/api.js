@@ -14,7 +14,7 @@ async function request(path, options = {}) {
 
   const response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = '/';
@@ -63,6 +63,8 @@ export const practice = {
   evaluateConversation: (data) => request('/practice/evaluate/conversation', { method: 'POST', body: JSON.stringify(data) }),
   getConversationReply: (user_message, topic, target_words, conversation_history) =>
     request('/practice/evaluate/conversation', { method: 'POST', body: JSON.stringify({ user_message, topic, target_words, conversation_history }) }),
+  completeSession: (duration_minutes, words_practiced) =>
+    request('/practice/session/complete', { method: 'POST', body: JSON.stringify({ duration_minutes, words_practiced }) }),
   transcribeAudio: (audioBlob) => {
     const fd = new FormData();
     fd.append('audio', audioBlob, 'audio.webm');

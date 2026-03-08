@@ -14,11 +14,21 @@ export default function PracticeSession({ onFinish, goalMinutes = 20 }) {
   const [error, setError] = useState(null);
   const [completed, setCompleted] = useState([]);
   const [startTime] = useState(Date.now());
+  const [sessionRecorded, setSessionRecorded] = useState(false);
 
   useEffect(() => {
     loadSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goalMinutes]);
+
+  useEffect(() => {
+    if (currentIndex >= queue.length && queue.length > 0 && !sessionRecorded) {
+      setSessionRecorded(true);
+      const minutes = Math.max(1, Math.round((Date.now() - startTime) / 60000));
+      practice.completeSession(minutes, completed.length).catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, queue.length]);
 
   async function loadSession() {
     try {
