@@ -5,6 +5,7 @@ const { authenticate } = require('../middleware/auth');
 const {
   getDailySession,
   submitAttempt,
+  completeSession,
   transcribeAudio,
   evaluatePronunciation,
   evaluateSentence,
@@ -21,6 +22,7 @@ router.use(authenticate);
 
 router.get('/session', getDailySession);
 router.post('/attempt', submitAttempt);
+router.post('/session/complete', completeSession);
 router.post('/transcribe', audioUpload.single('audio'), transcribeAudio);
 router.post('/evaluate/pronunciation', evaluatePronunciation);
 router.post('/evaluate/sentence', evaluateSentence);

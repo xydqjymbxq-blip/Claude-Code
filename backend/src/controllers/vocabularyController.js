@@ -64,10 +64,10 @@ async function importVocabulary(req, res, next) {
     for (let i = 0; i < newItems.length; i += chunkSize) {
       const chunk = newItems.slice(i, i + chunkSize);
       const values = chunk.map((item, idx) => {
-        const base = idx * 3;
-        return `($${base + 1}, $${base + 2}, $${base + 3}, ${userId})`;
+        const base = idx * 4;
+        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4})`;
       }).join(', ');
-      const params = chunk.flatMap(item => [item.russian_word, item.english_definition, item.notes || null]);
+      const params = chunk.flatMap(item => [item.russian_word, item.english_definition, item.notes || null, userId]);
       await db.query(
         `INSERT INTO vocabulary_items (russian_word, english_definition, notes, user_id)
          VALUES ${values}
@@ -177,7 +177,8 @@ async function updateWord(req, res, next) {
 
 async function deleteWord(req, res, next) {
   try {
-    await db.query('DELETE FROM vocabulary_items WHERE id = $1 AND user_id = $2', [req.params.id, req.user.userId]);
+    const result = await db.query('DELETE FROM vocabulary_items WHERE id = $1 AND user_id = $2', [req.params.id, req.user.userId]);
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Word not found' });
     res.json({ message: 'Word deleted' });
   } catch (err) {
     next(err);

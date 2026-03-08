@@ -39,16 +39,6 @@ async function getDashboard(req, res, next) {
       [userId]
     );
 
-    // Streak
-    const streakResult = await db.query(
-      `SELECT COUNT(DISTINCT session_date) as streak
-       FROM practice_sessions
-       WHERE user_id = $1
-       AND session_date >= CURRENT_DATE - INTERVAL '30 days'
-       AND session_date = CURRENT_DATE - (CURRENT_DATE - session_date)`,
-      [userId]
-    );
-
     const phaseDist = {};
     for (let i = 1; i <= 5; i++) phaseDist[i] = 0;
     phaseResult.rows.forEach(r => { phaseDist[r.current_phase] = parseInt(r.count); });
@@ -74,7 +64,8 @@ async function getDashboard(req, res, next) {
 
 async function getStats(req, res, next) {
   const userId = req.user.userId;
-  const { days = 30 } = req.query;
+  const rawDays = parseInt(req.query.days);
+  const days = Number.isInteger(rawDays) && rawDays > 0 && rawDays <= 365 ? rawDays : 30;
 
   try {
     // Daily practice over time
@@ -161,8 +152,8 @@ async function getWordHistory(req, res, next) {
     if (!word.rows[0]) return res.status(404).json({ error: 'Word not found' });
 
     const attempts = await db.query(
-      `SELECT * FROM practice_attempts WHERE vocabulary_item_id = $1 ORDER BY created_at DESC LIMIT 50`,
-      [id]
+      `SELECT * FROM practice_attempts WHERE vocabulary_item_id = $1 AND user_id = $2 ORDER BY created_at DESC LIMIT 50`,
+      [id, userId]
     );
 
     res.json({ word: word.rows[0], attempts: attempts.rows });

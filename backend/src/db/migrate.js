@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS practice_sessions (
   duration_minutes INTEGER,
   words_practiced INTEGER,
   session_type VARCHAR(50),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (user_id, session_date)
 );
 
 -- Practice attempts (detailed logging)

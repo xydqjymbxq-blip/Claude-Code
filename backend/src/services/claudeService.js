@@ -1,10 +1,12 @@
 const Anthropic = require('@anthropic-ai/sdk');
 
+const CLAUDE_TIMEOUT_MS = 20000;
+
 function getClient() {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error('ANTHROPIC_API_KEY environment variable is not set');
   }
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: CLAUDE_TIMEOUT_MS });
 }
 
 async function evaluatePronunciation(targetWord, userTranscript, userLevel = 'B1') {
@@ -37,6 +39,7 @@ Pay special attention to: stress placement, soft vs hard consonants, vowel reduc
   try {
     return JSON.parse(message.content[0].text);
   } catch {
+    console.warn('evaluatePronunciation: Claude returned non-JSON, using fallback:', message.content[0]?.text?.slice(0, 200));
     return { accuracy_score: 60, pass: false, tips: 'Keep practicing!', encouragement: 'Good effort!' };
   }
 }
@@ -70,6 +73,7 @@ Evaluate and return ONLY valid JSON (no markdown, no extra text):
   try {
     return JSON.parse(message.content[0].text);
   } catch {
+    console.warn('evaluateSentence: Claude returned non-JSON, using fallback:', message.content[0]?.text?.slice(0, 200));
     return { correct_usage: true, grammar_correct: true, makes_sense: true, naturalness: 3, advancement_eligible: true, tip: '' };
   }
 }
@@ -108,6 +112,7 @@ Evaluate and return ONLY valid JSON (no markdown, no extra text):
   try {
     return JSON.parse(message.content[0].text);
   } catch {
+    console.warn('evaluateConversation: Claude returned non-JSON, using fallback:', message.content[0]?.text?.slice(0, 200));
     return { overall_accuracy: 75, grammar_score: 75, fluency_score: 75, advancement_eligible: true, feedback: 'Good effort!' };
   }
 }
@@ -138,6 +143,7 @@ Return ONLY valid JSON:
   try {
     return JSON.parse(message.content[0].text);
   } catch {
+    console.warn('generateAssessmentFeedback: Claude returned non-JSON, using fallback:', message.content[0]?.text?.slice(0, 200));
     return { correct: false, confidence: 'low', suggested_phase: 1 };
   }
 }

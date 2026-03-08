@@ -2,10 +2,10 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["cd backend && npm install --production"]
+cmds = ["cd backend && npm ci --omit=dev"]
 
 [phases.build]
-cmds = []
+cmds = ["cd backend && node src/db/migrate.js"]
 
 [start]
 cmd = "cd backend && node src/server.js"
